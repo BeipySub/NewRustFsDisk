@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="architecture" name="01-全局架构">
-        <mxGraphModel dx="1395" dy="994" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+        <mxGraphModel dx="907" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -95,7 +95,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="disk-structure" name="02-运输盘结构">
-        <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+        <mxGraphModel dx="907" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -167,7 +167,7 @@
                 <mxCell id="step6" value="封盘&#xa;生成 manifest.zip 与 SHA256；最后将 disk_info.json.state 写为 SEALED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=16;" parent="1" vertex="1">
                     <mxGeometry x="350" y="1085" width="500" height="72" as="geometry"/>
                 </mxCell>
-                <mxCell id="done" value="当前盘 WRITTEN → CONFIRMED&#xa;导出任务：已封盘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=16;fontStyle=1;" parent="1" vertex="1">
+                <mxCell id="done" value="当前盘 WRITTEN → CONFIRMED，任务：已封盘&#xa;有下一块 READY 盘则继续当前扫描；没有盘则停止本次扫描&#xa;后续新盘插入时从 S3 第一页重新扫描" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=16;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="350" y="1205" width="500" height="62" as="geometry"/>
                 </mxCell>
                 <mxCell id="exception" value="异常处理&#xa;拔盘：任务为“等待恢复”，同 disk_id 重新插入后恢复。&#xa;读取或写入失败：任务为“导出失败”，硬盘仍在时 60 秒后自动重试。" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;fontSize=14;align=left;spacingLeft=12;" parent="1" vertex="1">
@@ -293,98 +293,98 @@
         </mxGraphModel>
     </diagram>
     <diagram id="sequence" name="05-端到端执行顺序">
-        <mxGraphModel dx="955" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1800" math="0" shadow="0">
+        <mxGraphModel dx="907" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1800" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="title" value="运输盘完整循环：从 Center 初始化到下一次可用" style="text;html=1;align=center;verticalAlign=middle;fontSize=25;fontStyle=1;fontColor=#1F2937;" vertex="1" parent="1">
+                <mxCell id="title" value="运输盘完整循环：从 Center 初始化到下一次可用" style="text;html=1;align=center;verticalAlign=middle;fontSize=25;fontStyle=1;fontColor=#1F2937;" parent="1" vertex="1">
                     <mxGeometry x="190" y="25" width="820" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="sub" value="时间从上到下；每一步标明实际执行方" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontColor=#6B7280;" vertex="1" parent="1">
+                <mxCell id="sub" value="时间从上到下；每一步标明实际执行方" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontColor=#6B7280;" parent="1" vertex="1">
                     <mxGeometry x="350" y="65" width="500" height="25" as="geometry"/>
                 </mxCell>
-                <mxCell id="role1" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role1" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="135" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step1" value="1. 格式化 ext4（如需要）并初始化 / 注册运输盘&#xa;生成新的 disk_id，盘状态为 READY；Center 数据库记录为 FREE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step1" value="1. 格式化 ext4（如需要）并初始化 / 注册运输盘&#xa;生成新的 disk_id，盘状态为 READY；Center 数据库记录为 FREE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="120" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role2" value="人工运输" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role2" value="人工运输" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="255" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step2" value="2. 将 READY 运输盘交给对应的 Edge 站点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step2" value="2. 将 READY 运输盘交给对应的 Edge 站点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="240" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role3" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role3" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="375" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step3" value="3. 自动挂载并发现运输盘&#xa;优先恢复同站点 WRITING 盘；没有时按 READY 入队时间选择" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step3" value="3. 自动挂载并发现运输盘&#xa;优先恢复同站点 WRITING 盘；没有时按 READY 入队时间选择" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="360" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role4" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role4" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="495" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step4" value="4. 分页扫描 RustFS 对象，依次写入加密 ZIP&#xa;每个成功写入对象记录 Edge 运行时导出账本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step4" value="4. 分页扫描 RustFS 对象，依次写入加密 ZIP&#xa;每个成功写入对象记录 Edge 运行时导出账本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="480" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role5" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role5" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="615" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step5" value="5. 当前对象放不下或待导出对象全部完成时封盘&#xa;写入 manifest.zip、SHA256；disk_info.json.state = SEALED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step5" value="5. 当前对象放不下或待导出对象全部完成时封盘&#xa;写入 manifest.zip、SHA256；disk_info.json.state = SEALED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="600" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role6" value="人工运输" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role6" value="人工运输" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="735" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step6" value="6. 将 SEALED 运输盘送回 Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step6" value="6. 将 SEALED 运输盘送回 Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="720" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role7" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role7" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="855" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step7" value="7. 自动发现 SEALED 盘并进入导入队列&#xa;校验 disk_id 为 FREE、Edge 站点已注册且可取得 Key" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step7" value="7. 自动发现 SEALED 盘并进入导入队列&#xa;校验 disk_id 为 FREE、Edge 站点已注册且可取得 Key" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="840" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role8" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role8" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="975" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step8" value="8. 解压 manifest.zip 并逐对象导入&#xa;校验 SHA256、去重后写入 Center RustFS 与对象账本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step8" value="8. 解压 manifest.zip 并逐对象导入&#xa;校验 SHA256、去重后写入 Center RustFS 与对象账本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="960" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="role9" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="role9" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="105" y="1095" width="140" height="46" as="geometry"/>
                 </mxCell>
-                <mxCell id="step9" value="9. 所有对象成功后，将旧 disk_id 标记为 USED&#xa;清理运输盘并重新初始化，生成新的 disk_id（FREE）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" vertex="1" parent="1">
+                <mxCell id="step9" value="9. 所有对象成功后，将旧 disk_id 标记为 USED&#xa;清理运输盘并重新初始化，生成新的 disk_id（FREE）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1">
                     <mxGeometry x="305" y="1080" width="680" height="78" as="geometry"/>
                 </mxCell>
-                <mxCell id="loop" value="进入下一次运输循环" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontSize=15;fontStyle=1;" vertex="1" parent="1">
+                <mxCell id="loop" value="进入下一次运输循环" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontSize=15;fontStyle=1;" parent="1" vertex="1">
                     <mxGeometry x="505" y="1220" width="280" height="55" as="geometry"/>
                 </mxCell>
-                <mxCell id="a1" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step1" target="step2">
+                <mxCell id="a1" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step1" target="step2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a2" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step2" target="step3">
+                <mxCell id="a2" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step2" target="step3" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a3" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step3" target="step4">
+                <mxCell id="a3" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step3" target="step4" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a4" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step4" target="step5">
+                <mxCell id="a4" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step4" target="step5" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a5" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step5" target="step6">
+                <mxCell id="a5" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step5" target="step6" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a6" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step6" target="step7">
+                <mxCell id="a6" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step6" target="step7" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a7" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step7" target="step8">
+                <mxCell id="a7" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step7" target="step8" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a8" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step8" target="step9">
+                <mxCell id="a8" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step8" target="step9" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="a9" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" edge="1" parent="1" source="step9" target="loop">
+                <mxCell id="a9" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step9" target="loop" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
             </root>
