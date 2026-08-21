@@ -15,7 +15,7 @@ WebSocket 仅用于后端向前端推送状态；格式化、初始化和注册�
 
 - 连接成功或断线重连后，后端先发送一次完整 `snapshot`；
 - 本地硬盘每秒扫描一次；硬盘列表变化时发送完整 `disks_updated`；
-- 任务每完成一个对象或任务状态变化时发送 `task_updated`；导出或导入进行中，每秒额外发送一次 `task_updated`；
+- 任务每完成一个对象或任务状态变化时，发送对应端的任务事件；导出或导入进行中，每秒额外发送一次；
 - 导出或导入进行中，每秒发送一次 `disks_updated`，刷新硬盘实际已用、剩余和可写空间；
 - Edge 的已导出对象总数或已导出数据总量变化时发送 `edge_summary_updated`；
 - Center 的已导入对象总数或已导入数据总量变化时发送 `center_summary_updated`；
@@ -56,6 +56,8 @@ Edge 的 `summary`：
   "exported_bytes": 1073741824000
 }
 ```
+
+`tasks` 的条目按 `side` 解释：`EDGE` 使用 `edge_task_updated.data` 的字段，`CENTER` 使用 `center_task_updated.data` 的字段。
 
 Center 的 `summary`：
 
@@ -112,15 +114,37 @@ Center 的 `summary`：
 
 ## 4. 任务状态
 
-### 4.1 `task_updated`
+### 4.1 `edge_task_updated`
 
-Edge 导出或 Center 导入任务变化时发送：
+Edge 导出任务变化时发送：
 
 ```json
 {
-  "event": "task_updated",
+  "event": "edge_task_updated",
   "data": {
-    "task_type": "EXPORT 或 IMPORT",
+    "disk_id": "550e8400-e29b-41d4-a716-446655440000",
+    "state": "当前任务状态",
+    "object_count": 500,
+    "exported_bytes": 429496729600,
+    "current_file_name": "source-bucket/2026/08/a.mp4",
+    "current_file_size": 1073741824,
+    "current_file_transferred_bytes": 536870912,
+    "speed_bytes_per_second": 104857600,
+    "error_message": null
+  }
+}
+```
+
+`object_count` 和 `exported_bytes` 分别是当前运输盘已写入对象数、已写入源文件数据量；不包含 ZIP 包装大小。
+
+### 4.2 `center_task_updated`
+
+Center 导入任务变化时发送：
+
+```json
+{
+  "event": "center_task_updated",
+  "data": {
     "disk_id": "550e8400-e29b-41d4-a716-446655440000",
     "state": "当前任务状态",
     "object_count": 1250,
@@ -137,12 +161,7 @@ Edge 导出或 Center 导入任务变化时发送：
 }
 ```
 
-| 后端 | `task_type` | 前端展示 |
-|---|---|---|
-| Edge | `EXPORT` | 导出状态、当前文件已传输字节数、已写入对象数和数据量、速度、错误 |
-| Center | `IMPORT` | 导入状态、进度、当前文件名、速度、预计完成时间和错误 |
-
-### 4.2 `center_summary_updated`
+### 4.3 `center_summary_updated`
 
 仅 Center 在成功导入对象后发送：
 
@@ -158,7 +177,7 @@ Edge 导出或 Center 导入任务变化时发送：
 
 `imported_bytes` 按解压后的原文件大小累计。
 
-### 4.3 `edge_summary_updated`
+### 4.4 `edge_summary_updated`
 
 仅 Edge 在封盘确认导出后发送：
 
@@ -180,6 +199,7 @@ Edge 导出或 Center 导入任务变化时发送：
 |---|---|
 | `snapshot` | 初始化整个页面状态 |
 | `disks_updated` | 用完整硬盘列表刷新硬盘卡片、运输盘列表和当前选中硬盘详情 |
-| `task_updated` | 刷新对应导出或导入任务的进度、当前文件名、速度、预计完成时间和错误 |
+| `edge_task_updated` | 刷新当前运输盘已写入对象数、源文件数据量、当前文件传输进度、速度和错误 |
+| `center_task_updated` | 刷新导入任务进度、当前文件传输进度、速度、预计完成时间和错误 |
 | `edge_summary_updated` | 刷新 Edge 首页的已导出对象总数和已导出数据总量 |
 | `center_summary_updated` | 刷新 Center 首页的已导入对象总数和已导入数据总量 |

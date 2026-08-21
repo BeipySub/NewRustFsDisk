@@ -1,0 +1,365 @@
+<mxfile host="65bd71144e">
+    <diagram id="architecture" name="01-全局架构">
+        <mxGraphModel dx="907" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="RustFS 离线运输盘同步系统架构" style="text;html=1;align=center;verticalAlign=middle;fontSize=24;fontStyle=1;fontColor=#1F2937;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="20" width="680" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeGroup" value="Edge 主机" style="swimlane;html=1;rounded=1;startSize=30;fillColor=#E8F1FF;strokeColor=#2563EB;fontStyle=1;fontSize=18;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="100" width="390" height="590" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeFront" value="Edge 前端页面" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=16;" parent="edgeGroup" vertex="1">
+                    <mxGeometry x="45" y="65" width="300" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeWs" value="WebSocket 页面通讯 Module&#xa;硬盘 / 导出进度 / 统计" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=14;" parent="edgeGroup" vertex="1">
+                    <mxGeometry x="45" y="155" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeApp" value="Edge 后端&#xa;导出任务 Module + 导出账本 Module" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BFDBFE;strokeColor=#1D4ED8;fontSize=15;fontStyle=1;" parent="edgeGroup" vertex="1">
+                    <mxGeometry x="45" y="270" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeDb" value="Edge 数据库&#xa;export_tasks / export_objects" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=14;" parent="edgeGroup" vertex="1">
+                    <mxGeometry x="45" y="405" width="140" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeS3" value="本地 RustFS&#xa;S3 接口" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=14;" parent="edgeGroup" vertex="1">
+                    <mxGeometry x="205" y="405" width="140" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="edgeMount" value="共享：自动挂载与目录扫描&#xa;/mnt/rustfs-transfer/{设备名}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=13;" parent="edgeGroup" vertex="1">
+                    <mxGeometry x="45" y="515" width="300" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="diskGroup" value="运输硬盘（离线交接）" style="swimlane;html=1;rounded=1;startSize=30;fillColor=#FFF7E6;strokeColor=#F59E0B;fontStyle=1;fontSize=18;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="220" width="330" height="330" as="geometry"/>
+                </mxCell>
+                <mxCell id="diskInfo" value="disk_info.json&#xa;明文：disk_id / 状态 / Edge 信息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#F59E0B;fontSize=14;" parent="diskGroup" vertex="1">
+                    <mxGeometry x="35" y="65" width="260" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="diskData" value="data/.../*.zip&#xa;对象 ZIP，ZipCrypto 加密" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;fontSize=14;" parent="diskGroup" vertex="1">
+                    <mxGeometry x="35" y="145" width="260" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="diskManifest" value="manifest.zip&#xa;加密清单 + SHA256" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#F59E0B;fontSize=14;" parent="diskGroup" vertex="1">
+                    <mxGeometry x="35" y="225" width="260" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="centerGroup" value="Center 主机" style="swimlane;html=1;rounded=1;startSize=30;fillColor=#ECFDF5;strokeColor=#16A34A;fontStyle=1;fontSize=18;" parent="1" vertex="1">
+                    <mxGeometry x="920" y="100" width="390" height="590" as="geometry"/>
+                </mxCell>
+                <mxCell id="centerFront" value="Center 前端页面" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=16;" parent="centerGroup" vertex="1">
+                    <mxGeometry x="45" y="65" width="300" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="centerWs" value="WebSocket 页面通讯 Module&#xa;硬盘 / 导入进度 / 统计" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=14;" parent="centerGroup" vertex="1">
+                    <mxGeometry x="45" y="155" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="centerApp" value="Center 后端&#xa;初始化 Module + 导入任务 Module + 对象账本 Module" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBF7D0;strokeColor=#15803D;fontSize=14;fontStyle=1;" parent="centerGroup" vertex="1">
+                    <mxGeometry x="45" y="270" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="centerDb" value="Center 数据库&#xa;edge_sites / disk_ids&#xa;import_tasks / import_objects" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=13;" parent="centerGroup" vertex="1">
+                    <mxGeometry x="45" y="405" width="140" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="centerS3" value="Center RustFS&#xa;归档桶 = edge_code" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=14;" parent="centerGroup" vertex="1">
+                    <mxGeometry x="205" y="405" width="140" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="centerMount" value="共享：自动挂载与目录扫描&#xa;/mnt/rustfs-transfer/{设备名}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=13;" parent="centerGroup" vertex="1">
+                    <mxGeometry x="45" y="515" width="300" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="e1" value="WebSocket" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#6B7280;endArrow=classic;" parent="1" source="edgeApp" target="edgeWs" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e2" value="HTTP 查询历史 / 操作" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#6B7280;endArrow=classic;" parent="1" source="edgeFront" target="edgeApp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e3" value="读对象 / 全量扫描" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#2563EB;" parent="1" source="edgeApp" target="edgeS3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e4" value="任务 / 账本" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#2563EB;" parent="1" source="edgeApp" target="edgeDb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e5" value="写入加密 ZIP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#F59E0B;fontStyle=1;" parent="1" source="edgeApp" target="diskGroup" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e6" value="读取 / 校验 / 解密" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#F59E0B;fontStyle=1;" parent="1" source="diskGroup" target="centerApp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e7" value="归档记录" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#16A34A;" parent="1" source="centerApp" target="centerDb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e8" value="写入归档" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=classic;strokeColor=#16A34A;" parent="1" source="centerApp" target="centerS3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e9" value="WebSocket" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#6B7280;endArrow=classic;" parent="1" source="centerApp" target="centerWs" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e10" value="HTTP 查询 / 初始化 / 注册" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;strokeColor=#6B7280;endArrow=classic;" parent="1" source="centerFront" target="centerApp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="disk-structure" name="02-运输盘结构">
+        <mxGraphModel dx="907" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="t" value="运输硬盘目录与 disk_info.json 结构" style="text;html=1;align=center;verticalAlign=middle;fontSize=24;fontStyle=1;fontColor=#1F2937;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="20" width="800" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="tree" value="rustfs-transport/&#xa;├── disk_info.json&#xa;├── manifest.zip&#xa;└── data/&#xa;    └── {来源桶名}/&#xa;        └── {来源目录}/&#xa;            └── {原对象名}.zip" style="shape=note;whiteSpace=wrap;html=1;fillColor=#FFF7E6;strokeColor=#F59E0B;fontFamily=Courier New;fontSize=17;align=left;spacingLeft=14;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="110" width="480" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="info" value="disk_info.json（明文）&#xa;&#xa;state: READY / WRITING / SEALED&#xa;disk.disk_id: 本次运输 UUID&#xa;disk.initialized_at&#xa;&#xa;edge:&#xa;  edge_name&#xa;  edge_code&#xa;  export_started_at（只首次写入）&#xa;  export_finished_at&#xa;  manifest_sha256&#xa;  object_count" style="shape=note;whiteSpace=wrap;html=1;fillColor=#E8F1FF;strokeColor=#2563EB;fontFamily=Courier New;fontSize=14;align=left;spacingLeft=14;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="110" width="400" height="400" as="geometry"/>
+                </mxCell>
+                <mxCell id="crypto" value="ZIP 加密规则&#xa;&#xa;算法：ZipCrypto&#xa;密码：日期(YYYY-MM-DD) + edge_code + key&#xa;日期来源：edge.export_started_at&#xa;对象 ZIP 与 manifest.zip 均加密&#xa;disk_info.json 不加密" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=16;align=left;spacingLeft=16;" parent="1" vertex="1">
+                    <mxGeometry x="1110" y="150" width="360" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="manifest" value="manifest.zip 内部：manifest.jsonl&#xa;&#xa;每行对象：&#xa;source_bucket / source_key&#xa;etag / size / plain_sha256&#xa;zip_path" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#16A34A;fontSize=15;align=left;spacingLeft=16;" parent="1" vertex="1">
+                    <mxGeometry x="1110" y="410" width="360" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow1" value="" style="endArrow=classic;html=1;strokeColor=#6B7280;" parent="1" source="tree" target="info" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow2" value="" style="endArrow=classic;html=1;strokeColor=#6B7280;" parent="1" source="info" target="crypto" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow3" value="" style="endArrow=classic;html=1;strokeColor=#6B7280;" parent="1" source="tree" target="manifest" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="edge-flow" name="03-Edge导出流程">
+        <mxGraphModel dx="907" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="t" value="Edge 自动导出与封盘流程" style="text;html=1;align=center;verticalAlign=middle;fontSize=24;fontStyle=1;fontColor=#1F2937;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="20" width="800" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="n1" value="扫描并自动挂载运输盘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="150" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n2" value="读取 disk_info.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="150" width="170" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="d1" value="状态？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=15;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="140" width="100" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="sealed" value="SEALED&#xa;仅展示，不写入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="670" y="80" width="170" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="writing" value="WRITING&#xa;仅同 edge_code 可恢复&#xa;盘与账本对账" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0E7FF;strokeColor=#4F46E5;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="670" y="160" width="170" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="ready" value="READY&#xa;进入导出队列" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E0E7FF;strokeColor=#4F46E5;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="670" y="270" width="170" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="n3" value="S3 分页扫描&#xa;跳过 CONFIRMED 与当前 WRITTEN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BFDBFE;strokeColor=#1D4ED8;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="260" width="205" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="d2" value="有待导出对象？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="250" width="115" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="noobj" value="删除待导出任务&#xa;保持 READY，不封盘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1330" y="170" width="175" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n4" value="READY：首次写入 Edge 信息并转 WRITING&#xa;WRITING：保留原 Edge 信息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BFDBFE;strokeColor=#1D4ED8;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="390" width="260" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n5" value="逐对象：空间判断 → 加密 ZIP → ETag/大小复核 → 账本 WRITTEN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="500" width="320" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="d3" value="拔盘 / 读取失败？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563EB;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="490" width="115" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="retry" value="等待恢复 / 导出失败&#xa;60 秒后自动恢复或重试" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1430" y="500" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n6" value="当前对象放不下&#xa;或待导出对象完成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="630" width="180" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="n7" value="生成 manifest.zip + SHA256&#xa;写封盘信息，最后 state = SEALED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1130" y="630" width="240" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="n8" value="当前盘 WRITTEN → CONFIRMED&#xa;任务：已封盘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1420" y="630" width="165" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="a1" value="" style="endArrow=classic;html=1;" parent="1" source="n1" target="n2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a2" value="" style="endArrow=classic;html=1;" parent="1" source="n2" target="d1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3" value="SEALED" style="endArrow=classic;html=1;" parent="1" source="d1" target="sealed" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a4" value="WRITING" style="endArrow=classic;html=1;" parent="1" source="d1" target="writing" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a5" value="READY" style="endArrow=classic;html=1;" parent="1" source="d1" target="ready" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6" value="" style="endArrow=classic;html=1;" parent="1" source="writing" target="n3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a7" value="" style="endArrow=classic;html=1;" parent="1" source="ready" target="n3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a8" value="" style="endArrow=classic;html=1;" parent="1" source="n3" target="d2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a9" value="否" style="endArrow=classic;html=1;" parent="1" source="d2" target="noobj" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a10" value="是" style="endArrow=classic;html=1;" parent="1" source="d2" target="n4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a11" value="" style="endArrow=classic;html=1;" parent="1" source="n4" target="n5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a12" value="" style="endArrow=classic;html=1;" parent="1" source="n5" target="d3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a13" value="是" style="endArrow=classic;html=1;" parent="1" source="d3" target="retry" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a14" value="否" style="endArrow=classic;html=1;" parent="1" source="d3" target="n6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a15" value="" style="endArrow=classic;html=1;" parent="1" source="n6" target="n7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a16" value="" style="endArrow=classic;html=1;" parent="1" source="n7" target="n8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="center-flow" name="04-Center导入流程">
+        <mxGraphModel dx="907" dy="646" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="t" value="Center 自动导入与重新初始化流程" style="text;html=1;align=center;verticalAlign=middle;fontSize=24;fontStyle=1;fontColor=#1F2937;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="20" width="800" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="n1" value="扫描并自动挂载运输盘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="180" width="190" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n2" value="读取 disk_info.json&#xa;仅 SEALED 盘进入队列" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="290" y="180" width="190" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n3" value="创建/读取 import_tasks&#xa;按 queued_at 串行导入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBF7D0;strokeColor=#15803D;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="530" y="180" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="d1" value="disk_id 状态 FREE&#xa;且 Edge 配置存在？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="790" y="165" width="130" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="reject" value="拒绝导入&#xa;保留 SEALED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="90" width="150" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n4" value="校验 manifest.zip SHA256&#xa;按密码流式读取 manifest.jsonl" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBF7D0;strokeColor=#15803D;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="970" y="210" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n5" value="逐条清单：对象账本去重&#xa;解密 ZIP → SHA256 校验 → 写 Center RustFS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="610" y="350" width="330" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="n6" value="成功对象写入 import_objects&#xa;更新任务数量和数据量" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1000" y="350" width="230" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="d2" value="全部对象完成？" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16A34A;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="490" width="130" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="retry" value="导入失败&#xa;保持 SEALED&#xa;60 秒后自动重试" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEE2E2;strokeColor=#DC2626;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="835" y="500" width="170" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="n7" value="任务导入成功&#xa;disk_ids 旧 disk_id → USED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BBF7D0;strokeColor=#15803D;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="500" width="210" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="n8" value="自动重新初始化&#xa;清空数据，生成新 disk_id&#xa;新 disk_id 状态 FREE / 盘状态 READY" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="1320" y="495" width="220" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="a1" value="" style="endArrow=classic;html=1;" parent="1" source="n1" target="n2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a2" value="" style="endArrow=classic;html=1;" parent="1" source="n2" target="n3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3" value="" style="endArrow=classic;html=1;" parent="1" source="n3" target="d1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a4" value="否" style="endArrow=classic;html=1;" parent="1" source="d1" target="reject" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a5" value="是" style="endArrow=classic;html=1;" parent="1" source="d1" target="n4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a6" value="" style="endArrow=classic;html=1;" parent="1" source="n4" target="n5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a7" value="" style="endArrow=classic;html=1;" parent="1" source="n5" target="n6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a8" value="" style="endArrow=classic;html=1;" parent="1" source="n6" target="d2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a9" value="否 / 任一步失败" style="endArrow=classic;html=1;" parent="1" source="d2" target="retry" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a10" value="是" style="endArrow=classic;html=1;" parent="1" source="d2" target="n7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a11" value="" style="endArrow=classic;html=1;" parent="1" source="n7" target="n8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="sequence" name="05-端到端执行顺序">
+        <mxGraphModel dx="1300" dy="1800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="1800" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="运输盘完整循环：从 Center 初始化到下一次可用" style="text;html=1;align=center;verticalAlign=middle;fontSize=25;fontStyle=1;fontColor=#1F2937;" parent="1" vertex="1"><mxGeometry x="190" y="25" width="820" height="40" as="geometry"/></mxCell>
+                <mxCell id="sub" value="时间从上到下；每一步标明实际执行方" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontColor=#6B7280;" parent="1" vertex="1"><mxGeometry x="350" y="65" width="500" height="25" as="geometry"/></mxCell>
+
+                <mxCell id="role1" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="135" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step1" value="1. 格式化 ext4（如需要）并初始化 / 注册运输盘&#xa;生成新的 disk_id，盘状态为 READY；Center 数据库记录为 FREE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="120" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role2" value="人工运输" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="255" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step2" value="2. 将 READY 运输盘交给对应的 Edge 站点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="240" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role3" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="375" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step3" value="3. 自动挂载并发现运输盘&#xa;优先恢复同站点 WRITING 盘；没有时按 READY 入队时间选择" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="360" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role4" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="495" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step4" value="4. 分页扫描 RustFS 对象，依次写入加密 ZIP&#xa;每个成功写入对象记录 Edge 运行时导出账本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="480" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role5" value="Edge" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DBEAFE;strokeColor=#2563EB;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="615" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step5" value="5. 当前对象放不下或待导出对象全部完成时封盘&#xa;写入 manifest.zip、SHA256；disk_info.json.state = SEALED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EFF6FF;strokeColor=#2563EB;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="600" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role6" value="人工运输" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="735" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step6" value="6. 将 SEALED 运输盘送回 Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="720" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role7" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="855" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step7" value="7. 自动发现 SEALED 盘并进入导入队列&#xa;校验 disk_id 为 FREE、Edge 站点已注册且可取得 Key" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="840" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role8" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="975" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step8" value="8. 解压 manifest.zip 并逐对象导入&#xa;校验 SHA256、去重后写入 Center RustFS 与对象账本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="960" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="role9" value="Center" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="105" y="1095" width="140" height="46" as="geometry"/></mxCell>
+                <mxCell id="step9" value="9. 所有对象成功后，将旧 disk_id 标记为 USED&#xa;清理运输盘并重新初始化，生成新的 disk_id（FREE）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;fontSize=16;align=left;spacingLeft=18;" parent="1" vertex="1"><mxGeometry x="305" y="1080" width="680" height="78" as="geometry"/></mxCell>
+
+                <mxCell id="loop" value="进入下一次运输循环" style="ellipse;whiteSpace=wrap;html=1;fillColor=#F3F4F6;strokeColor=#6B7280;fontSize=15;fontStyle=1;" parent="1" vertex="1"><mxGeometry x="505" y="1220" width="280" height="55" as="geometry"/></mxCell>
+
+                <mxCell id="a1" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step1" target="step2" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a2" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step2" target="step3" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a3" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step3" target="step4" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a4" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step4" target="step5" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a5" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step5" target="step6" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a6" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step6" target="step7" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a7" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step7" target="step8" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a8" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step8" target="step9" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+                <mxCell id="a9" value="" style="endArrow=classic;html=1;strokeWidth=2;strokeColor=#6B7280;" parent="1" source="step9" target="loop" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
