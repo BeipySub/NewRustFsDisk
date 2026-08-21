@@ -63,9 +63,10 @@
 
 ### 提交信息格式
 
-`<type>[(scope)]: <summary>  [body]  [footer]`
+`<emoji> <type>[(scope)]: <summary>  [body]  [footer]`
 
-- type 建议：feat、fix、docs、refactor、test、chore、build（其他场景按需）注意携带Emoji图标。
+- 注意携带Emoji图标，下方类型中有样式。
+- type 建议：feat、fix、docs、refactor、test、chore、build（其他场景按需）
 - scope 使用模块/目录（如 app、data、scripts），无明确范围可省略
 - summary 使用中文、动词开头，长度 ≤ 50 字，不加句号
 - 需要时在正文补充动机、影响或迁移方式
