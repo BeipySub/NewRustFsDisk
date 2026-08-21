@@ -126,4 +126,4 @@ Edge 数据库用于保存导出任务、运行时导出账本和已确认导出
 
 - 运输盘目录、`disk_info.json`、`manifest.zip` 和 ZIP 密码见 [运输硬盘通讯协议.md](运输硬盘通讯协议.md)；
 - 两端共用 Module 见 [开发设计说明.md](开发设计说明.md)；
-- WebSocket 细节后续统一补充，不在本设计中单独定义。
+- WebSocket 细节以 [WebSocket前后端通讯协议.md](WebSocket前后端通讯协议.md) 为准，不在本设计中重复定义。
